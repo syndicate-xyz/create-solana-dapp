@@ -1,6 +1,14 @@
 **/node_modules/
 dist/
 
+# macOS system files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+
 # lock files
 templates/**/package-lock.json
 templates/**/pnpm-lock.yaml
