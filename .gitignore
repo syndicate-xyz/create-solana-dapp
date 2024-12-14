@@ -1,0 +1,7 @@
+**/node_modules/
+dist/
+
+# lock files
+templates/**/package-lock.json
+templates/**/pnpm-lock.yaml
+templates/**/yarn.lock
