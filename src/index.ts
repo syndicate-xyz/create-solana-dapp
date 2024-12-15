@@ -1,4 +1,3 @@
-// import chalk from 'chalk'
 import consola from 'consola'
 import fs from 'fs-extra'
 import path from 'path'
