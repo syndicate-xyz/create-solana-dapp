@@ -3,7 +3,7 @@
 import { clusterApiUrl, Connection } from '@solana/web3.js'
 import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import { createContext, ReactNode, useContext } from 'react'
+import { createContext, ReactNode, useContext, useEffect } from 'react'
 
 export interface Cluster {
   name: string
@@ -73,11 +73,27 @@ const Context = createContext<ClusterProviderContext>(
   {} as ClusterProviderContext
 )
 
-export const ClusterProvider = ({ children }: { children: ReactNode }) => {
+// Add defaultCluster to the provider props interface
+interface ClusterProviderProps {
+  children: ReactNode
+  defaultCluster?: Cluster
+}
+
+export const ClusterProvider = ({
+  children,
+  defaultCluster,
+}: ClusterProviderProps) => {
   const cluster = useAtomValue(activeClusterAtom)
   const clusters = useAtomValue(activeClustersAtom)
   const setCluster = useSetAtom(clusterAtom)
   const setClusters = useSetAtom(clustersAtom)
+
+  // Set the default cluster on first render if provided
+  useEffect(() => {
+    if (defaultCluster) {
+      setCluster(defaultCluster)
+    }
+  }, []) // Empty dependency array ensures this only runs once
 
   const value: ClusterProviderContext = {
     cluster,
