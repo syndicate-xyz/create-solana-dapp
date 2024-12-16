@@ -1,5 +1,11 @@
+import ReactQueryProvider from './ReactQueryProvider'
 import { WalletAdapterProvider } from './WalletProvider'
 
+
 export const Providers = ({ children }: { children: React.ReactNode }) => {
-  return <WalletAdapterProvider>{children}</WalletAdapterProvider>
+  return (
+    <ReactQueryProvider>
+      <WalletAdapterProvider>{children}</WalletAdapterProvider>
+    </ReactQueryProvider>
+  )
 }
