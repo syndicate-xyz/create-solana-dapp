@@ -3,10 +3,10 @@
 import { clusterApiUrl, Connection } from '@solana/web3.js'
 import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import { createContext, ReactNode, useContext, useEffect } from 'react'
+import { createContext, ReactNode, useContext } from 'react'
 
 export interface Cluster {
-  name: string
+  name: 'mainnet-beta' | 'devnet' | 'testnet' | 'local' | 'custom'
   endpoint: string
   network?: ClusterNetwork
   active?: boolean
@@ -22,23 +22,28 @@ export enum ClusterNetwork {
 // By default, we don't configure the mainnet-beta cluster
 // The endpoint provided by clusterApiUrl('mainnet-beta') does not allow access from the browser due to CORS restrictions
 // To use the mainnet-beta cluster, provide a custom endpoint
-export const defaultClusters: Cluster[] = [
+export const defaultClusters: Array<Cluster> = [
+  {
+    name: 'mainnet-beta',
+    endpoint: clusterApiUrl('mainnet-beta'),
+    network: ClusterNetwork.Mainnet,
+  },
   {
     name: 'devnet',
     endpoint: clusterApiUrl('devnet'),
     network: ClusterNetwork.Devnet,
   },
-  { name: 'local', endpoint: 'http://localhost:8899' },
   {
     name: 'testnet',
     endpoint: clusterApiUrl('testnet'),
     network: ClusterNetwork.Testnet,
   },
+  { name: 'local', endpoint: 'http://localhost:8899' },
 ]
 
 const clusterAtom = atomWithStorage<Cluster>(
   'solana-cluster',
-  defaultClusters[0]
+  defaultClusters[1] // change default cluster here
 )
 const clustersAtom = atomWithStorage<Cluster[]>(
   'solana-clusters',
@@ -79,21 +84,11 @@ interface ClusterProviderProps {
   defaultCluster?: Cluster
 }
 
-export const ClusterProvider = ({
-  children,
-  defaultCluster,
-}: ClusterProviderProps) => {
+export const ClusterProvider = ({ children }: ClusterProviderProps) => {
   const cluster = useAtomValue(activeClusterAtom)
   const clusters = useAtomValue(activeClustersAtom)
   const setCluster = useSetAtom(clusterAtom)
   const setClusters = useSetAtom(clustersAtom)
-
-  // Set the default cluster on first render if provided
-  useEffect(() => {
-    if (defaultCluster) {
-      setCluster(defaultCluster)
-    }
-  }, []) // Empty dependency array ensures this only runs once
 
   const value: ClusterProviderContext = {
     cluster,

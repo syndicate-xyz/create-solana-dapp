@@ -1,3 +1,5 @@
+'use client'
+
 import { ClusterProvider } from './ClusterProvider'
 import { ReactQueryProvider } from './ReactQueryProvider'
 import { WalletAdapterProvider } from './WalletProvider'
