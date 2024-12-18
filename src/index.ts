@@ -54,16 +54,16 @@ async function createProject() {
 ✅ Project ${projectName} created successfully! ✨🚀
 
 To get started:
-  ${pc.bold(pc.italic('# Navigate to the project directory'))}
+  ${pc.italic('# Navigate to the project directory')}
   cd ${projectName}
 
-  ${pc.bold(pc.italic('# Install dependencies'))}
+  ${pc.italic('# Install dependencies')}
   ${
     mapPackageCommands[parsedPackageManager as keyof typeof mapPackageCommands]
       .install
   }
 
-  ${pc.bold(pc.italic('# Run the project'))}
+  ${pc.italic('# Run the project')}
   ${
     mapPackageCommands[parsedPackageManager as keyof typeof mapPackageCommands]
       .dev
