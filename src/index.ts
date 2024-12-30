@@ -1,9 +1,11 @@
+#!/usr/bin/env node
+
 import consola from 'consola'
 import fs from 'fs-extra'
 import path from 'path'
 import { parseCliArgs } from './cli'
 import { getPrompts } from './prompts'
-import { mapPackageCommands } from './utils'
+import { downloadProject, mapPackageCommands } from './utils'
 
 // parse cli args
 const { parsedName, parsedTemplate, parsedPackageManager } = parseCliArgs()
@@ -17,17 +19,10 @@ async function createProject() {
         parsedPackageManager,
       })
 
-    consola.start('Creating project...')
+    consola.start('Downloading project template...')
 
     const currentDir = process.cwd()
     const projectPath = path.join(currentDir, projectName)
-
-    const templatePath = path.join(
-      projectPath,
-      '..',
-      'templates',
-      projectTemplate
-    )
 
     // Check if directory already exists
     if (fs.existsSync(projectPath)) {
@@ -37,11 +32,11 @@ async function createProject() {
       process.exit(1)
     }
 
-    // copy template files
-    await fs.copy(templatePath, projectPath)
+    // download template
+    const { dir } = await downloadProject(projectTemplate, projectName)
 
     // read package.json
-    const packageJsonPath = path.join(projectPath, 'package.json')
+    const packageJsonPath = path.join(dir, 'package.json')
     const packageJson = await fs.readJson(packageJsonPath)
 
     // change project name

@@ -6,5 +6,4 @@ export default defineConfig({
   clean: true,
   minify: true,
   format: ['esm'],
-  onSuccess: 'rsync -av --quiet templates dist/ --exclude node_modules',
 })
